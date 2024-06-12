@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Perl One-Liners之参数-a和-F | eternal-bug的博客</title><meta name="author" content="eternal-bug"><meta name="copyright" content="eternal-bug"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="【上集回顾】 上次说到了-p与-n参数，其实再加上之前学的-e参数已经可以做很多事情了，但是为了方便，Perl还有这样一对搭档组合的参数，就是-a和-F 【参数解释】  -a : 将读入的$_进行分割，保存到@F列表之中，类似于split &#x2F;分隔符&#x2F; , $_; 而这个分隔符是由-F参数指定的，其实这个功能与awk工具相似   -F : 在添加-a参数时候，指定分隔符（可以是正则表达式），如果不加">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Perl One-Liners之参数-a和-F">
+<meta property="og:url" content="https://eternal-bug.github.io/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-a%E5%92%8C-F/index.html">
+<meta property="og:site_name" content="eternal-bug的博客">
+<meta property="og:description" content="【上集回顾】 上次说到了-p与-n参数，其实再加上之前学的-e参数已经可以做很多事情了，但是为了方便，Perl还有这样一对搭档组合的参数，就是-a和-F 【参数解释】  -a : 将读入的$_进行分割，保存到@F列表之中，类似于split &#x2F;分隔符&#x2F; , $_; 而这个分隔符是由-F参数指定的，其实这个功能与awk工具相似   -F : 在添加-a参数时候，指定分隔符（可以是正则表达式），如果不加">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2024-06-12T14:57:51.000Z">
+<meta property="article:modified_time" content="2024-06-12T16:26:57.979Z">
+<meta property="article:author" content="eternal-bug">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="R">
+<meta property="article:tag" content="生物信息学">
+<meta property="article:tag" content="统计学">
+<meta property="article:tag" content="计算化学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://eternal-bug.github.io/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-a%E5%92%8C-F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Perl One-Liners之参数-a和-F',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-06-13 00:26:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="eternal-bug的博客" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="eternal-bug的博客"><span class="site-name">eternal-bug的博客</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Perl One-Liners之参数-a和-F</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-06-12T14:57:51.000Z" title="发表于 2024-06-12 22:57:51">2024-06-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-12T16:26:57.979Z" title="更新于 2024-06-13 00:26:57">2024-06-13</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Perl One-Liners之参数-a和-F"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>【上集回顾】</p>
+<p>上次说到了<code>-p</code>与<code>-n</code>参数，其实再加上之前学的<code>-e</code>参数已经可以做很多事情了，但是为了方便，Perl还有这样一对搭档组合的参数，就是<code>-a</code>和<code>-F</code></p>
+<p>【参数解释】</p>
+<blockquote>
+<p><strong>-a</strong> : 将读入的<code>$_</code>进行分割，保存到<code>@F</code>列表之中，类似于<code>split /分隔符/ , $_;</code> 而这个分隔符是由<code>-F</code>参数指定的，其实这个功能与awk工具相似</p>
+</blockquote>
+<blockquote>
+<p><strong>-F</strong> : 在添加<code>-a</code>参数时候，指定分隔符（可以是正则表达式），如果不加好像是由空格作为分隔符，一般对其进行设置</p>
+</blockquote>
+<h2 id="实例说明">实例说明</h2>
+<p>为了更加清晰的说明，还是举例子吧，打开终端或者git for windows</p>
+<p>输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 例如我需要把来自管道的数据按照空格分隔成一个一个单元，存到列表里面</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;qwe asd zxc&quot;</span> | perl -n -a -F<span class="string">&quot;\s+&quot;</span>-e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  $&quot; = &quot;\n&quot;;</span></span><br><span class="line"><span class="string">  foreach my $item (@F)&#123;</span></span><br><span class="line"><span class="string">      print &quot;$item\n&quot;;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br><span class="line">--------------------------------------</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">qwe</span><br><span class="line">asd</span><br><span class="line">zxc</span><br></pre></td></tr></table></figure>
+<p>这次的例子要比之前的例子复杂一点，我来一一说明</p>
+<ol>
+<li><code>echo</code>在屏幕上打印出qwe asd zxc这个字符串，这字符串中间由空格分成三个部分，分别是qwe、asd、zxc</li>
+<li><code>echo</code>的输出进入管道 |</li>
+<li>被<code>perl</code>逐行读取（因为只有一行，所以直接读完了）</li>
+<li>读取的字符串赋值给<code>$_</code></li>
+<li><code>$_</code>被分割为三份（应<code>-a</code>的要求，根据<code>-F</code>（注意双引号是贴着-F参数的，中间没有空格隔开）的指定的\s+（意思是按照一个或者多个空格或者制表符分隔，这里也可以改为&quot; +&quot;），将<code>$_</code>分割为三份）</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">qwe asd zxc</span><br><span class="line">   ^   ^</span><br><span class="line">   |   |</span><br><span class="line">   空格</span><br><span class="line"></span><br><span class="line"># 根据空格来划分 \s+ 表示如果有多个空格相连也一并视为一个整体</span><br><span class="line"># 切割之后，空格都消失</span><br><span class="line"></span><br><span class="line">    /   /</span><br><span class="line">qwe/asd/zxc    成为 @F中的元素  (&#x27;qwe&#x27;,&#x27;asd&#x27;,&#x27;zxc&#x27;)</span><br><span class="line">  /   /</span><br></pre></td></tr></table></figure>
+<ol>
+<li>分隔的三份按照顺序存在<code>@F</code>列表中</li>
+<li>遍历<code>@F</code>列表，将其中的内容打印出来</li>
+</ol>
+<p>其实你可能会说，用之前之前学的参数就够了啊！比如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;qwe asd zxc&quot;</span> | perl -n -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">    my @F = split /\s+/,$_;</span></span><br><span class="line"><span class="string">    $&quot; = &quot;\n&quot;;</span></span><br><span class="line"><span class="string">    print &quot;@F\n&quot;;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>那为什么要这样做呢？其实在平常的文本中比没有感觉到，在linux或者mac系统下面，有很多信息就是以文本的形式给出来的，而且中间一般都是用空格或者制表符分隔的，就比如使用df命令查看磁盘使用情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span></span><br><span class="line">------------------------------------------</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">Filesystem           1K-blocks      Used Available Use% Mounted on</span><br><span class="line">C:/Program Files/Git 104857596  63822260  41035336  61% /</span><br><span class="line">D:                   318168060 313664144 125465657  40% /d</span><br><span class="line">E:                    41942012  21699268  20242744  52% /e</span><br></pre></td></tr></table></figure>
+<p>可以看到很鲜明的由空格或者制表符分隔的信息形式。 问题来了，利用这两个参数，我们可以试着做一下事情</p>
+<p><strong>问题1：我需要将所有的盘符提取并打印出来？</strong></p>
+<p>来试一下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span> | perl -n -a -F<span class="string">&quot;\s+&quot;</span> -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  print $F[0],&quot;\n&quot;;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br><span class="line">------------------------------------------</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">Filesystem</span><br><span class="line">C:/Program</span><br><span class="line">D:</span><br><span class="line">E:</span><br></pre></td></tr></table></figure>
+<p>可是标题行不是我想要的，怎么除去呢？ 有多种方法</p>
+<ol>
+<li>使用特殊变量<code>$.</code></li>
+</ol>
+<blockquote>
+<p><code>$.</code>意为当前读取的行数</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span> | perl -n -a -F<span class="string">&quot;\s+&quot;</span> -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  # 第一行就是标题行了，直接跳过它</span></span><br><span class="line"><span class="string">  if($. == 1)&#123;</span></span><br><span class="line"><span class="string">    next;</span></span><br><span class="line"><span class="string">  &#125;else&#123;</span></span><br><span class="line"><span class="string">    print $F[0],&quot;\n&quot;;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br><span class="line">------------------------------------------</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">C:/Program</span><br><span class="line">D:</span><br><span class="line">E:</span><br></pre></td></tr></table></figure>
+<ol>
+<li>借助Linux命令</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk中NR为内置变量，与上面的perl中的 $. 变量意义相同，就是当前读取的行数</span></span><br><span class="line"><span class="built_in">df</span> | perl -n -a -F<span class="string">&quot;\s+&quot;</span> -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  print $F[0],&quot;\n&quot;;</span></span><br><span class="line"><span class="string">&#x27;</span> | awk <span class="string">&#x27;NR&gt;1&#123;print $0&#125;&#x27;</span></span><br><span class="line">------------------------------------------</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">C:/Program</span><br><span class="line">D:</span><br><span class="line">E:</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：你发现在现实盘符的时候<code>C:/Program Files/Git</code>显示的是不完整的，只显示了<code>C:/Program</code>，也就是它被分隔了！！这里要说明一下，文件夹是可以使用空格的（特别是像windows下面的系统文件夹<code>C:/Program Files</code>，的确是很烦人），这个时候使用空格分隔则要小心，一般在linux和mac下面碰不到这种情况。这里为了演示更加方便，然后便于初次的讲解，我把C盘排除掉。但是要是的确有需要加入C盘来进行处理也是可以进行的，只是有点复杂，这里我不叙述，在文章末尾我进行一下探讨。</p>
+<p><strong>问题2：我要计算D盘和E盘总共已经使用的磁盘的内存（排除了C盘，原因见上述说明）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 与上面一样，还是将df命令的结果读取进来，然后分隔成各个元素存到@F中去</span></span><br><span class="line"><span class="built_in">df</span> | perl -n -a -F<span class="string">&quot;\s+&quot;</span> -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">BEGIN&#123;</span></span><br><span class="line"><span class="string">  $total = 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">chomp;</span></span><br><span class="line"><span class="string"># 排除C盘</span></span><br><span class="line"><span class="string">if(m/^C:/)&#123;</span></span><br><span class="line"><span class="string">  next;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">if($. == 1)&#123;</span></span><br><span class="line"><span class="string">  next;</span></span><br><span class="line"><span class="string">&#125;else&#123;</span></span><br><span class="line"><span class="string">  $total = $total + $F[2];</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">END&#123;</span></span><br><span class="line"><span class="string">  print &quot;total use : $total\n&quot;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br><span class="line">----------------------------------------------------</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">total use : 335363412</span><br></pre></td></tr></table></figure>
+<p>上面用到了两个特殊的代码块<code>BEGIN&#123;&#125;</code>和<code>END&#123;&#125;</code>，这两个代码块在perl的单行程序中会经常用到，说明一下它们两个的作用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 单行程序中的结构          # 流程解释</span><br><span class="line">_________________________________________________________</span><br><span class="line">BEGIN&#123;              |       +++++++++ 读取文件之前</span><br><span class="line">  代码1;            |       + 代码1 +  就运行代码1</span><br><span class="line">&#125;                   |       +++++++++  只运行一次</span><br><span class="line">                    |</span><br><span class="line">                    |       ---&gt; ++++</span><br><span class="line">                    |       ---&gt; +代+  然后每次读取一行</span><br><span class="line">代码2;              |       ---&gt; +码+  运行一下代码2</span><br><span class="line">                    |       ---&gt; +2 +</span><br><span class="line">                    |       .... ++++</span><br><span class="line">                    |</span><br><span class="line">END&#123;                |       +++++++++ 最后文件读取完毕</span><br><span class="line">  代码3;            |       + 代码3 + 运行代码3</span><br><span class="line">&#125;                   |       +++++++++ 只运行一次</span><br><span class="line">_________________________________________________________</span><br></pre></td></tr></table></figure>
+<p>其实<code>BEGIN&#123;&#125;</code>与<code>END&#123;&#125;</code>块放的顺序和位置并不重要，也就是说可以这样</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># 形式1</span><br><span class="line"></span><br><span class="line">BEGIN&#123;  </span><br><span class="line">  代码1;</span><br><span class="line">&#125;       </span><br><span class="line">END&#123;    </span><br><span class="line">  代码3;</span><br><span class="line">&#125;  </span><br><span class="line">代码2;  </span><br><span class="line">------------------</span><br><span class="line"># 形式2</span><br><span class="line">END&#123;    </span><br><span class="line">  代码3;</span><br><span class="line">&#125;</span><br><span class="line">代码2;</span><br><span class="line">BEGIN&#123;  </span><br><span class="line">  代码1;</span><br><span class="line">&#125; </span><br><span class="line">------------------</span><br><span class="line"># 形式3</span><br><span class="line">代码2; </span><br><span class="line">BEGIN&#123;  </span><br><span class="line">  代码1;</span><br><span class="line">&#125;       </span><br><span class="line">END&#123;    </span><br><span class="line">  代码3;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>其实除了这些由空格分隔的，我们平常使用的excel中的两个格式也是由特定的字符分隔的：</p>
+<ul>
+<li><strong>CSV</strong>文件 : 由逗号分隔的文本文件</li>
+<li><strong>TSV</strong>文件 : 由制表符分割的文本文件</li>
+</ul>
+<p>对于这种文件，使用这两个参数进行搭配，就省了很多事儿，是吧</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 例如一个文件 123.csv</span><br><span class="line"># 新建一个txt文本文件，将后缀名改成csv就可以</span><br><span class="line"># 内容为</span><br><span class="line">name,apple,banana,orange,grape,strawberry</span><br><span class="line">color,red,yellow,orange,purple,red</span><br></pre></td></tr></table></figure>
+<ul>
+<li>示例1</li>
+</ul>
+<p><strong>目标</strong>：打印出第一列，也就是标题</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> 123.csv | perl -n -a -F<span class="string">&quot;,&quot;</span> -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  print &quot;$F[0]\n&quot;;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">name</span><br><span class="line">color</span><br></pre></td></tr></table></figure>
+<ul>
+<li>示例2</li>
+</ul>
+<p><strong>目标</strong>：计算出现了多少种颜色</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> 123.csv | perl -n -a -F<span class="string">&quot;,&quot;</span> -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  # 如果第一列是color就执行代码</span></span><br><span class="line"><span class="string">  if($F[0] eq &#x27;</span>color<span class="string">&#x27;)&#123;</span></span><br><span class="line"><span class="string">    # 将第一个元素给扔掉</span></span><br><span class="line"><span class="string">    shift @F;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    for my $color (@F)&#123;</span></span><br><span class="line"><span class="string">      # 利用哈希对重复的颜色的合并</span></span><br><span class="line"><span class="string">      # 而不是简单的记录这个列表中有多少元素</span></span><br><span class="line"><span class="string">      # 因为存在重复的颜色</span></span><br><span class="line"><span class="string">      # 红色是两份，它的值为2</span></span><br><span class="line"><span class="string">      $hash&#123;$color&#125;++;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  END&#123;</span></span><br><span class="line"><span class="string">    # 使用scalar方法得到哈西键的个数</span></span><br><span class="line"><span class="string">    print &quot;Total number of color type : &quot;,scalar(keys %hash),&quot;\n&quot;;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br><span class="line">---------------------------------------------</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">Total number of color <span class="built_in">type</span> : 4</span><br></pre></td></tr></table></figure>
+<ul>
+<li>示例3 <strong>目标</strong>：按照下面那样的方式打印出来(之间是逗号相隔开)，这个其实就是列表的翻转，这个例子稍微有点复杂，这个例子意义其实不大。但是结合了多个perl单行程序</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">name,color</span><br><span class="line">apple,red</span><br><span class="line">banana,yellow</span><br><span class="line">orange,orange</span><br><span class="line">grape,purple</span><br><span class="line">strawberry,red</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 代码开始</span></span><br><span class="line"><span class="built_in">cat</span> 123.csv | perl -n -a -F<span class="string">&quot;,&quot;</span> -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  # 因为没有去处换行符，所以每一个元素后面均会带有回车符和换行符</span></span><br><span class="line"><span class="string">  # 这里将其除去</span></span><br><span class="line"><span class="string">  $F[-1] =~ s/\r*\n//;</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  my $title = shift @F;</span></span><br><span class="line"><span class="string">  my @items = @F;</span></span><br><span class="line"><span class="string">  my $item_num = scalar(@items) unless defined $item_num;</span></span><br><span class="line"><span class="string">  $title_num++;</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  # 列表里面的原始是有序的</span></span><br><span class="line"><span class="string">  # 用它来记录有顺序的title</span></span><br><span class="line"><span class="string">  push @title_list,$title;</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  # 哈希里面的元素是无序的</span></span><br><span class="line"><span class="string">  # 用它来记录每个title对应的该行的元素</span></span><br><span class="line"><span class="string">  $hash&#123;$title&#125; = \@items;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  END&#123;</span></span><br><span class="line"><span class="string">    $&quot; = &quot;,&quot;;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    # 先输出标题行</span></span><br><span class="line"><span class="string">    print &quot;@title_list\n&quot;;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    # 然后打印出各个元素</span></span><br><span class="line"><span class="string">    for my $row (0..$item_num-1)&#123;</span></span><br><span class="line"><span class="string">      for my $key (@title_list)&#123;</span></span><br><span class="line"><span class="string">        print $hash&#123;$key&#125;-&gt;[$row];</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        print &quot;,&quot;;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">      print &quot;\n&quot;;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#x27;</span> | perl -p -e <span class="string">&#x27;s/,$//&#x27;</span></span><br><span class="line"></span><br><span class="line">-----------------------------------------------------</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">name,color</span><br><span class="line">apple,red</span><br><span class="line">banana,yellow</span><br><span class="line">orange,orange</span><br><span class="line">grape,purple</span><br><span class="line">strawberry,red</span><br></pre></td></tr></table></figure>
+<h2 id="补充说明">补充说明</h2>
+<ul>
+<li>-a与-F参数的顺序不重要，但是一定要放在-e参数之前</li>
+<li>-F指定分隔符的时候后面的分隔符要贴着-F参数，中间不要有空格之类，否则会报错</li>
+</ul>
+<h2 id="探讨">探讨</h2>
+<p>上面说到有时候文件夹会出现空格的情况，像上面出现的<code>C:/Program Files/Git</code>被分隔的情况。那这样难道就没有办法来处理吗？再来看一下<code>df</code>的输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span></span><br><span class="line">------------------------------------------</span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">Filesystem           1K-blocks      Used Available Use% Mounted on</span><br><span class="line">C:/Program Files/Git 104857596  63822260  41035336  61% /</span><br><span class="line">D:                   318168060 313664144 125465657  40% /d</span><br><span class="line">E:                    41942012  21699268  20242744  52% /e</span><br></pre></td></tr></table></figure>
+<p>虽然按照空格来分隔可能有些行不通了，但是能不能转换一下思维，按照字符串的数量来划分：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|-------------------|---------|---------|---------|----|----------|</span><br><span class="line">Filesystem           1K-blocks      Used Available Use% Mounted on</span><br><span class="line">C:/Program Files/Git 104857596  63822260  41035336  61% /</span><br><span class="line">D:                   318168060 313664144 125465657  40% /d</span><br><span class="line">E:                    41942012  21699268  20242744  52% /e</span><br></pre></td></tr></table></figure>
+<p>可以看到每一列对应的字符串长度（空格也会被计算）是一致的 来！试一试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这个时候不能直接用空格分隔了，得采用一些特殊的方法</span></span><br><span class="line"><span class="comment"># 设置行数</span></span><br><span class="line"><span class="built_in">export</span> col=1</span><br><span class="line"><span class="built_in">df</span> | perl -n -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  BEGIN&#123;</span></span><br><span class="line"><span class="string">    # 设置想要打印的列数</span></span><br><span class="line"><span class="string">    # 传入环境中变量</span></span><br><span class="line"><span class="string">    $col = $ENV&#123;&#x27;</span>col<span class="string">&#x27;&#125;;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  if($. == 1)&#123;</span></span><br><span class="line"><span class="string">    @title_slice = (22,11,11,11,5,11);</span></span><br><span class="line"><span class="string">    next;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  my $offset = 0;</span></span><br><span class="line"><span class="string">  map &#123;$offset+= $_&#125; @F[0..$col-2] if $col-2 &gt; 0;</span></span><br><span class="line"><span class="string">  print substr($_,$offset,$title_slice[$col-1]-1) =~ s/\s*(.+?)\s*/$1/r,&quot;\n&quot;;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br><span class="line"><span class="comment"># 但是这样需要人工去数，也不是个好办法</span></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://eternal-bug.github.io">eternal-bug</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://eternal-bug.github.io/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-a%E5%92%8C-F/">https://eternal-bug.github.io/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-a%E5%92%8C-F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://eternal-bug.github.io" target="_blank">eternal-bug的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-M%E5%92%8C-I/" title="Perl One-Liners之参数-M和-I"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Perl One-Liners之参数-M和-I</div></div></a></div><div class="next-post pull-right"><a href="/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-p%E5%92%8C-n/" title="Perl One-Liners之参数-p和-n"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Perl One-Liners之参数-p和-n</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">eternal-bug</div><div class="author-info__description">一个</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/eternal-bug"><i class="fab fa-github"></i><span>关注我</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">实例说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">补充说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A2%E8%AE%A8"><span class="toc-number">3.</span> <span class="toc-text">探讨</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/13/%E7%94%9F%E7%89%A9%E7%94%BB%E5%9B%BE%E5%A4%A7%E4%BD%9C%E6%88%98%E4%B9%8B%E5%9F%BA%E7%A1%80%E7%AF%87/" title="生物画图大作战之基础篇">生物画图大作战之基础篇</a><time datetime="2024-06-12T16:14:46.000Z" title="发表于 2024-06-13 00:14:46">2024-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/12/Perl-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%9E%E6%88%982-fastq%E6%96%87%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/" title="Perl 命令行实战2 - fastq文件的相关操作">Perl 命令行实战2 - fastq文件的相关操作</a><time datetime="2024-06-12T15:06:57.000Z" title="发表于 2024-06-12 23:06:57">2024-06-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/12/Perl-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%9E%E6%88%981-fasta%E6%96%87%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/" title="Perl 命令行实战1 - fasta文件的相关操作">Perl 命令行实战1 - fasta文件的相关操作</a><time datetime="2024-06-12T15:06:46.000Z" title="发表于 2024-06-12 23:06:46">2024-06-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/12/Perl-One-Liners%E4%B9%8B%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F/" title="Perl One-Liners之特殊变量">Perl One-Liners之特殊变量</a><time datetime="2024-06-12T14:58:32.000Z" title="发表于 2024-06-12 22:58:32">2024-06-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-M%E5%92%8C-I/" title="Perl One-Liners之参数-M和-I">Perl One-Liners之参数-M和-I</a><time datetime="2024-06-12T14:58:08.000Z" title="发表于 2024-06-12 22:58:08">2024-06-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By eternal-bug</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

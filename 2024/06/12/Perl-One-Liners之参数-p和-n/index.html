@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Perl One-Liners之参数-p和-n | eternal-bug的博客</title><meta name="author" content="eternal-bug"><meta name="copyright" content="eternal-bug"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="【上集回顾】： 上一次提到了-e参数，一般在使用perl的单行程序时都会加上-e参数。-e参数就是将后面引号内的内容当作perl代码执行。 这一次来说一说另外两个常见的-p和-n参数，这两个参数与输入输出相关 简介  -p：将参数当作文件读取进来，并且每次读取一行遍历文件，并把执行-e参数之后的perl代码部分得到默认变量$_打印到标准输出中（可以是屏幕也可以进入管道）。 -n：将参数当作文件读取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Perl One-Liners之参数-p和-n">
+<meta property="og:url" content="https://eternal-bug.github.io/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-p%E5%92%8C-n/index.html">
+<meta property="og:site_name" content="eternal-bug的博客">
+<meta property="og:description" content="【上集回顾】： 上一次提到了-e参数，一般在使用perl的单行程序时都会加上-e参数。-e参数就是将后面引号内的内容当作perl代码执行。 这一次来说一说另外两个常见的-p和-n参数，这两个参数与输入输出相关 简介  -p：将参数当作文件读取进来，并且每次读取一行遍历文件，并把执行-e参数之后的perl代码部分得到默认变量$_打印到标准输出中（可以是屏幕也可以进入管道）。 -n：将参数当作文件读取">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2024-06-12T14:57:35.000Z">
+<meta property="article:modified_time" content="2024-06-12T16:24:21.686Z">
+<meta property="article:author" content="eternal-bug">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="R">
+<meta property="article:tag" content="生物信息学">
+<meta property="article:tag" content="统计学">
+<meta property="article:tag" content="计算化学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://eternal-bug.github.io/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-p%E5%92%8C-n/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Perl One-Liners之参数-p和-n',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-06-13 00:24:21'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="eternal-bug的博客" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="eternal-bug的博客"><span class="site-name">eternal-bug的博客</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Perl One-Liners之参数-p和-n</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-06-12T14:57:35.000Z" title="发表于 2024-06-12 22:57:35">2024-06-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-12T16:24:21.686Z" title="更新于 2024-06-13 00:24:21">2024-06-13</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Perl One-Liners之参数-p和-n"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>【上集回顾】</strong>： 上一次提到了-e参数，一般在使用perl的单行程序时都会加上-e参数。-e参数就是将后面引号内的内容当作perl代码执行。</p>
+<p>这一次来说一说另外两个常见的-p和-n参数，这两个参数与输入输出相关</p>
+<h2 id="简介">简介</h2>
+<blockquote>
+<p><strong>-p</strong>：将参数当作文件读取进来，并且每次读取一行遍历文件，并把执行-e参数之后的perl代码部分得到默认变量$_打印到标准输出中（可以是屏幕也可以进入管道）。</p>
+<p><strong>-n</strong>：将参数当作文件读取进来，并且每次读取一行遍历文件。</p>
+</blockquote>
+<p>两个看起来共性有点大，那有什么区别呢？</p>
+<p>在之前先来看一个例子吧！</p>
+<h2 id="例子">例子</h2>
+<p>首先新建一个文件 <code>123.txt</code></p>
+<p>里面的内容为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">the string is hello</span><br><span class="line">the number is 12345</span><br><span class="line">the float is 1.2345</span><br></pre></td></tr></table></figure>
+<p>我怎么知道是不是逐行读取的呢？</p>
+<p>在<code>123.txt</code>所在位置右键，打开<code>git bash here</code>或者打开终端<code>cd</code>到当前目录</p>
+<p>输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">perl -n -e <span class="string">&#x27;++$n;print &quot;$n  $_&quot;&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出为</span></span><br><span class="line"></span><br><span class="line">1  the string is hello</span><br><span class="line">2  the number is 12345</span><br><span class="line">3  the <span class="built_in">float</span> is 1.2345</span><br></pre></td></tr></table></figure>
+<p>可以看到程序部分执行了三次，<strong>文件是逐行读取的</strong>。</p>
+<h2 id="p参数">-p参数</h2>
+<ul>
+<li>示例1</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 比如我想让含有字符串string的行打印出来</span></span><br><span class="line">perl -p -e <span class="string">&#x27;m/string/&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出为</span></span><br><span class="line">the string is hello</span><br><span class="line">the number is 12345</span><br><span class="line">the <span class="built_in">float</span> is 1.2345</span><br></pre></td></tr></table></figure>
+<p>可以看到和原来的文件是没有什么两样的</p>
+<ul>
+<li>示例1.1</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入</span></span><br><span class="line">perl -p -e <span class="string">&#x27;s/string/number/&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">the number is hello</span><br><span class="line">the number is 12345</span><br><span class="line">the <span class="built_in">float</span> is 1.2345</span><br></pre></td></tr></table></figure>
+<p>第一行和之前的结果不一样了</p>
+<p>但是假如说我想的是“只要那些有string这样字眼的行输出出来呢”？</p>
+<p>于是我就想可不可以这样写:</p>
+<ul>
+<li>示例2</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入</span></span><br><span class="line">perl -p -e <span class="string">&#x27;if(m/string/)&#123;print $_&#125;&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出为</span></span><br><span class="line">the string is hello</span><br><span class="line">the string is hello</span><br><span class="line">the number is 12345</span><br><span class="line">the <span class="built_in">float</span> is 1.2345</span><br></pre></td></tr></table></figure>
+<p>可以看到文件第一行输出了两次，也就是说</p>
+<blockquote>
+<p><code>-p</code>参数不管你的代码中有什么判断语句来控制输出，每读取一行都会输出一下<code>$_</code>，这个与代码中的print不会合并，它不管究竟有没有print</p>
+</blockquote>
+<p>那它是输出的什么呢，输出什么时候的<code>$_</code>呢？</p>
+<p>来这样试一下：</p>
+<ul>
+<li>示例3</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">perl -p -e <span class="string">&#x27;s/string/number/;s/hello/world/&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出为</span></span><br><span class="line">the number is world</span><br><span class="line">the number is 12345</span><br><span class="line">the <span class="built_in">float</span> is 1.2345</span><br></pre></td></tr></table></figure>
+<p>传进来文件第一行的变量<code>$_</code>在perl代码中其实变换了两次</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">最开始时候：the string is hello</span><br><span class="line">第一次变换：the number is hello</span><br><span class="line">第二次变化：the number is world</span><br></pre></td></tr></table></figure>
+<p>可以看到，<code>-p</code>参数每次输出的<code>$_</code>的值是它从代码执行最后的值</p>
+<p>再来调戏一下<code>$_</code>：</p>
+<ul>
+<li>示例4</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">perl -p -e <span class="string">&#x27;if(m/string/)&#123;$_ = &quot;foo\n&quot;&#125;&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出为</span></span><br><span class="line">foo</span><br><span class="line">the number is 12345</span><br><span class="line">the <span class="built_in">float</span> is 1.2345</span><br></pre></td></tr></table></figure>
+<p>第一行已经变了，就是说<code>$_</code>是可以被改变，甚至改变巨大都可以</p>
+<p>那为了刚才我们的目标，可以这样：</p>
+<ul>
+<li>示例5</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果不能匹配到 string 就将变量$_设置为空字符串，类似于清空 </span></span><br><span class="line">perl -p -e <span class="string">&#x27;if(!m/string/)&#123;$_ = &quot;&quot;&#125;&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出为</span></span><br><span class="line">the string is hello</span><br></pre></td></tr></table></figure>
+<p>哈哈！没难倒我们！达到目标了！</p>
+<p>你有没有感觉不太好呢！这里判断条件倒是很简单，所以可以这样做，假如判断条件多了，代码量多了，每次都要这样来思考不是有点不顺吗？</p>
+<p>这样吧，开门见山，有请<code>-n</code>参数登场</p>
+<h2 id="n参数">-n参数</h2>
+<p>先来按照<code>-p</code>的路子试一试<code>-n</code></p>
+<ul>
+<li>示例6</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 我想要的是将含有string字符串的行打印出来</span></span><br><span class="line">perl -n -e <span class="string">&#x27;m/string/&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出为：</span></span><br></pre></td></tr></table></figure>
+<p>是的，什么都没有，的确是这样，不是我码字把它码掉了。其实有了上面的<code>-p</code>的说明，这里<code>-n</code>已经比较明确了，它其他方面的和<code>-p</code>一样，但是他不会输出<code>$_</code>，也就是说程序默认不会输出任何东西（当然不包括错误信息在内）</p>
+<p>于是上面的问题就可以这样解了：</p>
+<ul>
+<li>示例7</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">perl -n -e <span class="string">&#x27;if(m/string/)&#123;print $_&#125;&#x27;</span> 123.txt</span><br><span class="line"></span><br><span class="line">输出为：</span><br><span class="line">the string is hello</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>到了这里大家应该明白了-p和-n的区别，其实对于命令行来说，-p和-n用的都挺多的，就看你需要什么，怎么做起来更快，就选哪一个。</p>
+</blockquote>
+<h2 id="问题">问题</h2>
+<p><strong>问：假如我读取文件不想要后面的换行符出现，输出的时候我自己加换行符，怎么做？</strong></p>
+<p>答：其实和写perl脚本一样，其实可以这样做</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -n -e <span class="string">&#x27;chomp;if(/string/)&#123;print &quot;$_\n&quot;&#125;&#x27;</span> 123.txt</span><br></pre></td></tr></table></figure>
+<p>也就是加一个chomp。其实除了这种方式，还有一种加上参数<code>-l</code>可以达到先自动<code>chomp</code>，之后自动在<code>$_</code>后面加上<code>\n</code>然后输出</p>
+<p><strong>问：这个-p和-n参数的每行读取文件怎么和那个钻石操作符<code>&lt;&gt;</code>一样啊！</strong></p>
+<p>答：的确是这样的</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 平常写perl脚本我们一般写</span></span><br><span class="line"><span class="keyword">open</span> READ,<span class="string">&quot;&lt;&quot;</span>,<span class="string">&quot;123.txt&quot;</span> <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">&quot;$!&quot;</span>;</span><br><span class="line"><span class="keyword">while</span>(&lt; READ &gt;)&#123;</span><br><span class="line">    ..........;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对于单行程序直接就是</span></span><br><span class="line">perl -n -e <span class="string">&#x27;........&#x27;</span> <span class="number">123</span>.txt</span><br></pre></td></tr></table></figure>
+<p>这样看来单行程序在写较短程序上比直接去写perl脚本来的快，来的节省</p>
+<p>在这里再引申一下</p>
+<p>如果我有一个fasta文件，假设名称为fasta.fasta 内容为</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;cox1</span><br><span class="line">ATGCGATCGTAGCATGCTAGCTACG</span><br><span class="line">ACAAGCTAGCTAGCTAGCAGCATCT</span><br><span class="line">ACGTGCAT</span><br><span class="line">&gt;rpl10</span><br><span class="line">ATGAGCTAGCTAGCTAGACGTACGT</span><br><span class="line">ACGTAG</span><br></pre></td></tr></table></figure>
+<p>假如在命令行中这样输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -p -e <span class="string">&#x27;if(/^&gt;/)&#123;$_ = &lt;&gt; || &quot;&quot;&#125;&#x27;</span> fasta.fasta</span><br></pre></td></tr></table></figure>
+<p>输出为</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ATGCGATCGTAGCATGCTAGCTACG</span><br><span class="line">ACAAGCTAGCTAGCTAGCAGCATCT</span><br><span class="line">ACGTGCAT</span><br><span class="line">ATGAGCTAGCTAGCTAGACGTACGT</span><br><span class="line">ACGTAG</span><br></pre></td></tr></table></figure>
+<p><strong>问：为什么我一直没有输出啊！</strong></p>
+<p>答：你是不是把参数顺序写反了</p>
+<ul>
+<li>错误写法 <code>perl -e -p 'print if /string/' 123.txt</code> <code>perl -e -n 'print if /string/' 123.txt</code> <code>perl -ep 'print if /string/' 123.txt</code></li>
+<li>正确写法 <code>perl -p -e 'print if /string/' 123.txt</code> <code>perl -pe 'print if /string/' 123.txt</code></li>
+</ul>
+<p>第三种情况虽然两个参数并在一起写了，可是有先后顺序，其实第三种就是第一种的写法。也就是说引号对引起来的代码需要靠近-e，而且-e参数一般放在所有参数最后一个</p>
+<h2 id="perl读取文件的方式">perl读取文件的方式</h2>
+<ul>
+<li>放在命令行代码块的末尾</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -n -e <span class="string">&#x27;print $_&#x27;</span> 123.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结合Linux工具</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> 123.txt | perl -n -e <span class="string">&#x27;print $_&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用文件句柄</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">perl -e <span class="string">&#x27;</span></span><br><span class="line"><span class="string">open FILE,&quot;&lt;&quot;,&quot;123.txt&quot; or die $!;</span></span><br><span class="line"><span class="string">while(&lt;FILE&gt;)&#123;</span></span><br><span class="line"><span class="string">    print $_;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&#x27;</span></span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://eternal-bug.github.io">eternal-bug</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://eternal-bug.github.io/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-p%E5%92%8C-n/">https://eternal-bug.github.io/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-p%E5%92%8C-n/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://eternal-bug.github.io" target="_blank">eternal-bug的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-a%E5%92%8C-F/" title="Perl One-Liners之参数-a和-F"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Perl One-Liners之参数-a和-F</div></div></a></div><div class="next-post pull-right"><a href="/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-e/" title="Perl One-Liners之参数-e"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Perl One-Liners之参数-e</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">eternal-bug</div><div class="author-info__description">一个</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/eternal-bug"><i class="fab fa-github"></i><span>关注我</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">2.</span> <span class="toc-text">例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#p%E5%8F%82%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">-p参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n%E5%8F%82%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">-n参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#perl%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">6.</span> <span class="toc-text">perl读取文件的方式</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/13/%E7%94%9F%E7%89%A9%E7%94%BB%E5%9B%BE%E5%A4%A7%E4%BD%9C%E6%88%98%E4%B9%8B%E5%9F%BA%E7%A1%80%E7%AF%87/" title="生物画图大作战之基础篇">生物画图大作战之基础篇</a><time datetime="2024-06-12T16:14:46.000Z" title="发表于 2024-06-13 00:14:46">2024-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/12/Perl-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%9E%E6%88%982-fastq%E6%96%87%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/" title="Perl 命令行实战2 - fastq文件的相关操作">Perl 命令行实战2 - fastq文件的相关操作</a><time datetime="2024-06-12T15:06:57.000Z" title="发表于 2024-06-12 23:06:57">2024-06-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/12/Perl-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%9E%E6%88%981-fasta%E6%96%87%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/" title="Perl 命令行实战1 - fasta文件的相关操作">Perl 命令行实战1 - fasta文件的相关操作</a><time datetime="2024-06-12T15:06:46.000Z" title="发表于 2024-06-12 23:06:46">2024-06-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/12/Perl-One-Liners%E4%B9%8B%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F/" title="Perl One-Liners之特殊变量">Perl One-Liners之特殊变量</a><time datetime="2024-06-12T14:58:32.000Z" title="发表于 2024-06-12 22:58:32">2024-06-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/12/Perl-One-Liners%E4%B9%8B%E5%8F%82%E6%95%B0-M%E5%92%8C-I/" title="Perl One-Liners之参数-M和-I">Perl One-Liners之参数-M和-I</a><time datetime="2024-06-12T14:58:08.000Z" title="发表于 2024-06-12 22:58:08">2024-06-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By eternal-bug</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
